@@ -5,41 +5,7 @@ import UserForm from "./components/UserForm";
 import { DataTable } from "./components/DataTable";
 import FilterBar from "./components/FilterBar";
 import TransfererList from "./components/TransfererList";
-
-let sampleData: User[] = [
-  {
-    id: "1",
-    username: "dev",
-    fullName: "dev sadisatsowala",
-    city: "surat",
-    age: 20,
-    side: "left",
-  },
-  {
-    id: "2",
-    username: "dev1",
-    fullName: "dev sadisatsowala1",
-    city: "surat1",
-    age: 21,
-    side: "left",
-  },
-  {
-    id: "3",
-    username: "dev3",
-    fullName: "dev sadisatsowala3",
-    city: "surat3",
-    age: 23,
-    side: "left",
-  },
-  {
-    id: "4",
-    username: "dev4",
-    fullName: "dev sadisatsowala4",
-    city: "surat4",
-    age: 24,
-    side: "left",
-  },
-];
+import { sampleData } from "./lib/constants";
 
 function App() {
   const [data, setData] = useState<User[]>(sampleData);
@@ -81,6 +47,9 @@ function App() {
           <TransfererList data={data} setData={setData} />
         </div>
       </div>
+
+
+      <input type="checkbox" name="dev" id="dev-unique" onClick={(e: any) => {console.log(e.target.name)}} />
     </>
   );
 }

@@ -19,7 +19,6 @@ const UserForm = ({
   setForm: React.Dispatch<React.SetStateAction<User>>;
 }) => {
   function handleChangeForm(event: React.ChangeEvent<HTMLInputElement>) {
-    console.log("Form id is: ", form.id || "null");
 
     setForm((prev) => {
       return {
@@ -55,7 +54,6 @@ const UserForm = ({
         return [...prev, { ...form, id: Date.now().toString() }];
       });
     }
-    console.log(data);
     setIsEditing(false);
     setForm({
       id: "",

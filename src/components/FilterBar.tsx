@@ -20,26 +20,25 @@ const FilterBar = ({
 }) => {
   const uniqueFieldsArray: Fields[] = ["username", "fullName", "city", "age"];
 
-  // const [uniqueFields, setUniqueFields] = React.useState();
-  const [uniqueValues, setUniqueValues] = React.useState<(string | number)[]>([]);
-  const [uniqueField, setUniqueField] = React.useState("");
-  const [uniqueValue, setUniqueValue] = React.useState("");
+  const [values, setValues] = React.useState<(string | number)[]>([]);
+
+  const [selectedField, setSelectedField] = React.useState("");
+  const [selectedValue, setSelectedValue] = React.useState("");
 
   const [error, setError] = React.useState("")
 
   const handleFilter = () => {
-    console.log("Clicked the filter button!");
 
-    if(uniqueField.length === 0 || uniqueValue.length === 0) {
+    if(selectedField.length === 0 || selectedValue.length === 0) {
       setError("Please Select the filters first")
     }
 
-    let value: string | number = uniqueField === "age" ? Number(uniqueValue) : uniqueValue
+    let value: string | number = selectedField === "age" ? Number(selectedValue) : selectedValue
   
     setDataToDisplay([])
 
     setDataToDisplay((_prev) => {
-      return data.filter((user) => user[uniqueField as Fields] === value)
+      return data.filter((user) => user[selectedField as Fields] === value)
     })
   };
 
@@ -50,18 +49,18 @@ const FilterBar = ({
         <SelectDemo
           typeTemp="field"
           values={uniqueFieldsArray}
-          value={uniqueField}
+          value={selectedField}
           data={data}
-          setValue={setUniqueField}
-          setAnotherVal={setUniqueValues}
+          setValue={setSelectedField}
+          setAnotherVal={setValues}
           setError={setError}
           />
         <SelectDemo
           typeTemp="value"
-          values={uniqueValues}
+          values={values}
           data={data}
-          value={uniqueValue}
-          setValue={setUniqueValue}
+          value={selectedValue}
+          setValue={setSelectedValue}
           setError={setError}
         />
         <Button onClick={handleFilter}>Filter</Button>
@@ -94,7 +93,6 @@ export function SelectDemo({
 
   const handleChange = (value: string) => {
     setValue(value)
-    console.log(value);
     
     if (setAnotherVal) {
       setAnotherVal([]);
