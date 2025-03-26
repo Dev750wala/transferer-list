@@ -13,6 +13,7 @@ const TransfererList = ({
 
     function handleTransfer(
         mode: "selected" | "all",
+        from: "left" | "right",
         to: "left" | "right"
     ) {
         if (mode === "all") {
@@ -99,6 +100,8 @@ const TransfererList = ({
 const TransferButton = ({
     from,
     to,
+    data,
+    setData,
     mode,
     symbol,
     handleTransfer,

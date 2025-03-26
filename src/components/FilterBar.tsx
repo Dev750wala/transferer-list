@@ -1,129 +1,121 @@
 import * as React from "react";
 
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Fields, User } from "@/interface";
 import { Button } from "./ui/button";
 
 const FilterBar = ({
-  data,
-  setDataToDisplay,
+    setFilter,
+    data,
 }: {
-  data: User[];
-  setDataToDisplay: React.Dispatch<React.SetStateAction<User[]>>;
+    setFilter: React.Dispatch<React.SetStateAction<[string, string]>>;
+    data: User[];
 }) => {
-  const uniqueFieldsArray: Fields[] = ["username", "fullName", "city", "age"];
+    const uniqueFieldsArray: Fields[] = ["username", "fullName", "city", "age"];
 
-  const [values, setValues] = React.useState<(string | number)[]>([]);
+    const [values, setValues] = React.useState<(string | number)[]>([]);
 
-  const [selectedField, setSelectedField] = React.useState("");
-  const [selectedValue, setSelectedValue] = React.useState("");
+    const [selectedField, setSelectedField] = React.useState("");
+    const [selectedValue, setSelectedValue] = React.useState("");
 
-  const [error, setError] = React.useState("")
+    const [error, setError] = React.useState("");
 
-  const handleFilter = () => {
+    const handleFilter = () => {
+        if (selectedField.length === 0 || selectedValue.length === 0) {
+            setError("Please Select the filters first");
+        }
 
-    if(selectedField.length === 0 || selectedValue.length === 0) {
-      setError("Please Select the filters first")
-    }
 
-    let value: string | number = selectedField === "age" ? Number(selectedValue) : selectedValue
-  
-    setDataToDisplay([])
+        // SET FILTER
+        setFilter([selectedField, selectedValue]);
+    };
 
-    setDataToDisplay((_prev) => {
-      return data.filter((user) => user[selectedField as Fields] === value)
-    })
-  };
-
-  return (
-    <>
-      <h2 className="text-3xl">Filter User Info</h2>
-      <div className="flex flex-row gap-4 border-2 rounded-xl p-4">
-        <SelectDemo
-          typeTemp="field"
-          values={uniqueFieldsArray}
-          value={selectedField}
-          data={data}
-          setValue={setSelectedField}
-          setAnotherVal={setValues}
-          setError={setError}
-          />
-        <SelectDemo
-          typeTemp="value"
-          values={values}
-          data={data}
-          value={selectedValue}
-          setValue={setSelectedValue}
-          setError={setError}
-        />
-        <Button onClick={handleFilter}>Filter</Button>
-        <Button onClick={() => setDataToDisplay(data)}>All</Button>
-      </div>
-      <h3 className="text-red-700">{error}</h3>
-    </>
-  );
+    return (
+        <>
+            <h2 className="text-3xl">Filter User Info</h2>
+            <div className="flex flex-row gap-4 border-2 rounded-xl p-4">
+                <SelectDemo
+                    typeTemp="field"
+                    values={uniqueFieldsArray}
+                    value={selectedField}
+                    data={data}
+                    setValue={setSelectedField}
+                    setAnotherVal={setValues}
+                    setError={setError}
+                />
+                <SelectDemo
+                    typeTemp="value"
+                    values={values}
+                    data={data}
+                    value={selectedValue}
+                    setValue={setSelectedValue}
+                    setError={setError}
+                />
+                <Button onClick={handleFilter}>Filter</Button>
+                <Button onClick={() => setFilter(['all', 'all'])}>All</Button>
+            </div>
+            <h3 className="text-red-700">{error}</h3>
+        </>
+    );
 };
 
 export default FilterBar;
 
 export function SelectDemo({
-  typeTemp,
-  data,
-  values,
-  value,
-  setValue,
-  setAnotherVal,
-  setError,
+    typeTemp,
+    data,
+    values,
+    value,
+    setValue,
+    setAnotherVal,
+    setError,
 }: {
-  typeTemp: "field" | "value";
-  data: User[];
-  values: (string | number)[];
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
-  setAnotherVal?: React.Dispatch<React.SetStateAction<(string | number)[]>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
+    typeTemp: "field" | "value";
+    data: User[];
+    values: (string | number)[];
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+    setAnotherVal?: React.Dispatch<React.SetStateAction<(string | number)[]>>;
+    setError: React.Dispatch<React.SetStateAction<string>>;
 }) {
+    const handleChange = (value: string) => {
+        setValue(value);
 
-  const handleChange = (value: string) => {
-    setValue(value)
-    
-    if (setAnotherVal) {
-      setAnotherVal([]);
-      let temp = data.map((user) => {
-        return user[value as "username" | "fullName" | "city" | "age"]
-      })
+        if (setAnotherVal) {
+            setAnotherVal([]);
+            let temp = data.map((user) => {
+                return user[value as "username" | "fullName" | "city" | "age"];
+            });
 
-      setAnotherVal([...new Set(temp)])
-    }
+            setAnotherVal([...new Set(temp)]);
+        }
 
-    setError("")
-  }
+        setError("");
+    };
 
-  return (
-      <Select
-        onValueChange={(value) => handleChange(value)}
-      >
-        <SelectTrigger className="w-[180px] bg-white">
-          <SelectValue placeholder={`unique ${typeTemp}`} />
-        </SelectTrigger>
-        <SelectContent className="bg-white">
-          <SelectGroup>
-            {values.map((value) => {
-              return (
-                <SelectItem key={value} value={value.toString()}>
-                  {value}
-                </SelectItem>
-              );
-            })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-  );
+    return (
+        <Select onValueChange={(value) => handleChange(value)}>
+            <SelectTrigger className="w-[180px] bg-white">
+                <SelectValue placeholder={`unique ${typeTemp}`} />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+                <SelectGroup>
+                    {values.map((value) => {
+                        return (
+                            <SelectItem key={value} value={value.toString()}>
+                                {value}
+                            </SelectItem>
+                        );
+                    })}
+                </SelectGroup>
+            </SelectContent>
+        </Select>
+    );
 }
